@@ -66,6 +66,8 @@ bool get_debug() {
 
 int main()
 {
+
+	player p(true, false, false, 0);
 	// Set the random seed
 	srand(time(nullptr));
 	
@@ -76,11 +78,16 @@ int main()
 	// Ask user whether they want debug mode
 	bool debug = get_debug();
 
+	
 	// Construct game object
-	game g(width, height, debug);
+	game g(width, height, debug,p);
+	//
 
+//
 	//Play game
-	g.play_game();
-
+	g.play_game(p);
+	Room rooms;
+	
+	
 	return 0;
 }

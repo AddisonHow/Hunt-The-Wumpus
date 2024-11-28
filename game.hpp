@@ -4,23 +4,36 @@
 #include <vector>
 
 #include "room.hpp"
+#include "gold.hpp"
+#include "bat_swarm.hpp"
+#include "bottomless_pit.hpp"
+#include "wumpus.hpp"
+#include "escape_rope.hpp"
+#include "arrow.hpp"
 
 // game interface
 class game {
-private:
+	private:
 	// TODO declare a 2D vector of Room objects:
-
+	std::vector<std::vector<Room>> rooms;
 	// Suggested member variables:
 	int num_arrows = 0; 	// keep track of number of arrows remaining
 	int width;				// width of the game grid
 	int height;				// height of the game grid
 	bool debug;				// debug mode or not
-
+	bool wumpusAlive = true;
+	int wCol = 0;
+	int wRow = 0;
 	// TODO Feel free to add more member variables if you'd like
 
 public:
 	// Suggested functions (there are no required functions here):
-	
+	bool getWumpusAlive()const{return this->wumpusAlive;}
+	void setWumpusIsAlive(bool wumpusAlive){this->wumpusAlive = wumpusAlive;}
+	int getWCol(){return this->wCol;}
+	int getWRow(){return this->wRow;}
+	void setWCol(int wCol){this->wCol = wCol;}
+	void setWRow(int wRow){this->wRow = wRow;}	
 	/*
 	 * Function: Constructor
 	 * Description: Constructs game object with a grid matching the given
@@ -30,27 +43,32 @@ public:
 	 * 		height (int): Height of the grid
 	 * 		debug (bool): Whether or not debug mode should be enabled
 	 */
-	game(int width, int height, bool debug);
+	game(int width, int height, bool debug,player& p);
+//new
+	std::vector<std::vector<Room>>& getRooms() {
+        return this->rooms;
+    }
+//to here
 
 	/*
 	 * Function: display_game
 	 * Description: Displays the game grid in the terminal
 	 */
-	void display_game() const;
+	void display_game(player& p) const;
 
 	/*
 	 * Function: check_win
 	 * Description: Determines whether the player has won the game
 	 * Returns (bool): True if the player has won, false otherwise
 	 */
-	bool check_win() const;
+	bool check_win(player& p) const;
 
 	/*
 	 * Function: check_lose
 	 * Description: Determines whether the player has lost the game
 	 * Returns (bool): True if the player has lost, false otherwise
 	 */
-	bool check_lose() const;
+	bool check_lose(player& p) const;
 
 	/*
 	 * Function: is_direction
@@ -83,7 +101,7 @@ public:
 	 * Returns (bool): True if the player can move in the given direction
 	 * 		without moving off the grid. False otherwise.
 	 */
-	bool can_move_in_direction(char direction);
+	bool can_move_in_direction(char direction, player& p);
 
 	/*
 	 * Function: is_valid_action
@@ -92,7 +110,7 @@ public:
 	 * 		action (char): Action the player wishes to perform.
 	 * Returns (bool): True if the requested action is valid. False otherwise.
 	 */
-	bool is_valid_action(char action);
+	bool is_valid_action(char action,player& p);
 
 	/*
 	 * Function: print_action_error
@@ -111,7 +129,7 @@ public:
 	 * 		provided.
 	 * Returns (char): The valid action provided by the player.
 	 */
-	char get_player_action();
+	char get_player_action(player& p);
 
 	/*
 	 * Function: get_arrow_fire_direction
@@ -130,7 +148,7 @@ public:
 	 * 		hitting the edge of the board)
 	 * Post-condition: Player is moved accordingly.
 	 */
-	void move_up();
+	void move_up(player& p);
 
 	/*
 	 * Function: move_down
@@ -139,7 +157,7 @@ public:
 	 * 		hitting the edge of the board)
 	 * Post-condition: Player is moved accordingly.
 	 */
-	void move_down();
+	void move_down(player& p);
 
 	/*
 	 * Function: move_left
@@ -148,7 +166,7 @@ public:
 	 * 		hitting the edge of the board)
 	 * Post-condition: Player is moved accordingly.
 	 */
-	void move_left();
+	void move_left(player& p);
 
 	/*
 	 * Function: move_right
@@ -157,7 +175,7 @@ public:
 	 * 		hitting the edge of the board)
 	 * Post-condition: Player is moved accordingly.
 	 */
-	void move_right();
+	void move_right(player& p);
 
 	/*
 	 * Function: move
@@ -170,7 +188,7 @@ public:
 	 * 		hitting the edge of the board)
 	 * Post-condition: Player is moved accordingly.
 	 */
-	void move(char direction);
+	void move(char direction, player& p);
 
 	/*
 	 * Function: fire_arrow_up
@@ -178,7 +196,7 @@ public:
 	 * Post-condition: Arrow is fired upward. Wumpus is killed if hit / moves
 	 * 		if missed.
 	 */
-	void fire_arrow_up();
+	void fire_arrow_up(player& p);
 
 	/*
 	 * Function: fire_arrow_down
@@ -186,7 +204,7 @@ public:
 	 * Post-condition: Arrow is fired downward. Wumpus is killed if hit / moves
 	 * 		if missed.
 	 */
-	void fire_arrow_down();
+	void fire_arrow_down(player& p, int height);
 
 	/*
 	 * Function: fire_arrow_left
@@ -194,7 +212,7 @@ public:
 	 * Post-condition: Arrow is fired leftward. Wumpus is killed if hit / moves
 	 * 		if missed.
 	 */
-	void fire_arrow_left();
+	void fire_arrow_left(player& p);
 
 	/*
 	 * Function: fire_arrow_right
@@ -202,7 +220,7 @@ public:
 	 * Post-condition: Arrow is fired rightward. Wumpus is killed if hit / moves
 	 * 		if missed.
 	 */
-	void fire_arrow_right();
+	void fire_arrow_right(player& p,int width);
 
 	/*
 	 * Function: fire_arrow
@@ -214,14 +232,39 @@ public:
 	 * Post-condition: Arrow is fired. Wumpus is killed if hit and moves if
 	 * 		missed.
 	 */
-	void fire_arrow(char direction);
+	void fire_arrow(char direction,player& p);
 
 	/*
 	 * Function: play_game
 	 * Description: Runs one full iteration of the game
 	 */
-	void play_game();
-
-	// TODO Add more member functions here
+	void play_game(player& p);
+/*
+ * Function: printPercept
+ * Description: Checks the adjacent rooms to the player's current position and prints any events 
+ *              that may be present. It looks at the room below, above, to the right, and to the left 
+ *              of the player and invokes the `percept` method of the event in the room, if one exists.
+ * Parameters:
+ * 		p (player&): A reference to the `player` object representing the player in the game.
+ * 		height (int): The total height of the grid of rooms (number of rows).
+ * 		width (int): The total width of the grid of rooms (number of columns).
+ * Returns: 
+ * 		void: This function doesn't return a value, but it may print percept information to the console.
+ */
+	void printPercept(player&,int height, int width);
+	
+/*
+ * Function: moveWumpus
+ * Description: Moves the Wumpus to a new adjacent room, selected randomly. The function ensures that 
+ *              the Wumpus only moves to a valid room (one that is within bounds and does not already 
+ *              have an event). The Wumpus will be moved to one of the four possible directions: 
+ *              up, down, left, or right. If a move is valid, the Wumpus' previous room will no longer 
+ *              hold an event, and the new room will have the Wumpus as its event.
+ * Parameters: 
+ * 		None.
+ * Returns: 
+ * 		void: This function does not return a value, but it updates the room where the Wumpus is located.
+ */
+	void moveWumpus();
 };
 #endif
