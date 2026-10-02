@@ -2,7 +2,23 @@
 #include <cstdlib>
 #include <ctime>
 #include "game.hpp"
-
+/*cs 162 assignment 5: hunt the wumpus
+addison howard: 
+assignment description:Goal of this assignment: the goal of this assignment is to
+ have one user enter a cave of rooms with the goal of either collecting the gold 
+ and escaping or to kill the Wumpus. Their starting location has an escape rope 
+ and they will move around the cave system they will use WASD to move around this 
+ cave system(w for north, a for west, d for east, and s for south. Within this cave 
+ system there are multiple hazards and things they can find, the hazards are bottomless
+  pits which have a 50% chance of killing you and bats that disorient you. They can find 
+  the gold and if they do they need to make there way back to the escape route or they can 
+  find an arrow that will allow them to attempt to kill the Wumpus. Throughout the process of the 
+  user moving through the caves there are percepts, that being when there hazards, the Wumpus or 
+  the gold near by, for example, if the Wumpus is in a room adjacent to the user the terminal 
+  will print “the hairs stand up on the back of your neck.” The cave system will be shown 
+  on the terminal as a square grid and if they choose the debug mode all the hazards and 
+  gold and arrows will be shown on said grid, and if they choose not to only their location will be shown with a * symbol. 
+  */
 /*
  * Function: get_width
  * Description: Prompts the user for the game board width (# of columns)

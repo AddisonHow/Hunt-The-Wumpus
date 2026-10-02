@@ -26,7 +26,7 @@ if(this->roomEvent != NULL){
 
 	 Room(const Room& otherRoom);
 
-	void operator=(const Room& otherRoom);/
+	void operator=(const Room& otherRoom);
 };
 
 
